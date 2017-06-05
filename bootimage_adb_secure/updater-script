@@ -1,0 +1,27 @@
+ui_print(" ");
+ui_print(" ");
+ui_print(" ========================");
+ui_print(" | Bootimage ADB Secure |");
+ui_print(" |   Adrian DC - 2017   |");
+ui_print(" ========================");
+ui_print(" ");
+
+show_progress(1.000000, 0);
+ui_print("  - Extracting the script files...");
+package_extract_dir("scripts", "/tmp/");
+set_perm(0, 0, 0777, "/tmp/bootimage_adb_secure.sh");
+
+set_progress(0.330000);
+ui_print("  - Patching the bootimage...");
+assert(run_program("/tmp/bootimage_adb_secure.sh") == 0);
+
+set_progress(0.660000);
+ui_print("  - Cleaning temporary files...");
+delete("/tmp/bbootimg");
+delete("/tmp/bootimage_adb_secure.sh");
+
+set_progress(1.000000);
+ui_print(" ");
+ui_print("  Patch completed!");
+ui_print(" ");
+
