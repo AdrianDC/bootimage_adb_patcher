@@ -1,8 +1,9 @@
 #!/sbin/sh
 
-# find_boot_image logic by Chainfire
-for PARTITION in kern-a KERN-A android_boot ANDROID_BOOT Kernel kernel KERNEL boot BOOT lnx LNX; do
-  BOOTIMAGE=$(readlink /dev/block/by-name/$PARTITION || readlink /dev/block/platform/*/by-name/$PARTITION || readlink /dev/block/platform/*/*/by-name/$PARTITION);
+# find_boot_image logic by Chainfire, improved to support Sony 8960 Kernel and MTK /dev/bootimg
+for PARTITION in kern-a KERN-A android_boot ANDROID_BOOT Kernel kernel KERNEL boot BOOT lnx LNX bootimg; do
+  BOOTIMAGE=$(readlink /dev/block/by-name/$PARTITION || readlink /dev/block/platform/*/by-name/$PARTITION || \
+              readlink /dev/block/platform/*/*/by-name/$PARTITION || readlink /dev/$PARTITION);
   if [ ! -z "${BOOTIMAGE}" ]; then
     break;
   fi;
