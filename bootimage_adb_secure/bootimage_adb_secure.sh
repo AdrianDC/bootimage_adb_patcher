@@ -36,23 +36,25 @@ rm -f ../initrd.cpio;
 rm -f ../initrd.img;
 
 # Patch the ramdisk
-if grep -q 'ro.secure=' ./default.prop; then
-  sed -i 's/ro.secure=.*/ro.secure=1/' ./default.prop;
-else
-  echo '# Bootimage ADB Secure: Added ro.secure' >> ./default.prop;
-  echo 'ro.secure=1' >> ./default.prop;
-fi;
-if grep -q 'ro.adb.secure=' ./default.prop; then
-  sed -i 's/ro.adb.secure=.*/ro.adb.secure=1/' ./default.prop;
-else
-  echo '# Bootimage ADB Secure: Added ro.adb.secure' >> ./default.prop;
-  echo 'ro.adb.secure=1' >> ./default.prop;
-fi;
-if grep -q 'persist.sys.usb.config=' ./default.prop; then
-  sed -i 's/persist.sys.usb.config=.*/persist.sys.usb.config=none/' ./default.prop;
-else
-  echo '# Bootimage ADB Secure: Added persist.sys.usb.config' >> ./default.prop;
-  echo 'persist.sys.usb.config=none' >> ./default.prop;
+if [ -f ./default.prop ]; then
+  if grep -q 'ro.secure=' ./default.prop; then
+    sed -i 's/ro.secure=.*/ro.secure=1/' ./default.prop;
+  else
+    echo '# Bootimage ADB Secure: Added ro.secure' >> ./default.prop;
+    echo 'ro.secure=1' >> ./default.prop;
+  fi;
+  if grep -q 'ro.adb.secure=' ./default.prop; then
+    sed -i 's/ro.adb.secure=.*/ro.adb.secure=1/' ./default.prop;
+  else
+    echo '# Bootimage ADB Secure: Added ro.adb.secure' >> ./default.prop;
+    echo 'ro.adb.secure=1' >> ./default.prop;
+  fi;
+  if grep -q 'persist.sys.usb.config=' ./default.prop; then
+    sed -i 's/persist.sys.usb.config=.*/persist.sys.usb.config=none/' ./default.prop;
+  else
+    echo '# Bootimage ADB Secure: Added persist.sys.usb.config' >> ./default.prop;
+    echo 'persist.sys.usb.config=none' >> ./default.prop;
+  fi;
 fi;
 
 # Repack the ramdisk
@@ -71,6 +73,28 @@ fi;
 /tmp/bbootimg -u ${BOOTIMAGE} -r ./initrd.img;
 if [ $? -ne 0 ]; then
   return 1;
+fi;
+
+# Patch the system
+if [ -f /system/etc/prop.default ]; then
+  if grep -q 'ro.secure=' /system/etc/prop.default; then
+    sed -i 's/ro.secure=.*/ro.secure=1/' /system/etc/prop.default;
+  else
+    echo '# Bootimage ADB Secure: Added ro.secure' >> /system/etc/prop.default;
+    echo 'ro.secure=1' >> /system/etc/prop.default;
+  fi;
+  if grep -q 'ro.adb.secure=' /system/etc/prop.default; then
+    sed -i 's/ro.adb.secure=.*/ro.adb.secure=1/' /system/etc/prop.default;
+  else
+    echo '# Bootimage ADB Secure: Added ro.adb.secure' >> /system/etc/prop.default;
+    echo 'ro.adb.secure=1' >> /system/etc/prop.default;
+  fi;
+  if grep -q 'persist.sys.usb.config=' /system/etc/prop.default; then
+    sed -i 's/persist.sys.usb.config=.*/persist.sys.usb.config=none/' /system/etc/prop.default;
+  else
+    echo '# Bootimage ADB Secure: Added persist.sys.usb.config' >> /system/etc/prop.default;
+    echo 'persist.sys.usb.config=none' >> /system/etc/prop.default;
+  fi;
 fi;
 
 # Result
