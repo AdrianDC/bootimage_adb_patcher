@@ -1,0 +1,31 @@
+ui_print(" ");
+ui_print(" ");
+ui_print(" ============================");
+ui_print(" | Bootimage Debug Addition |");
+ui_print(" |     Adrian DC - 2018     |");
+ui_print(" ============================");
+ui_print(" ");
+
+show_progress(1.000000, 0);
+ui_print("  - Extracting the script files...");
+package_extract_dir("scripts", "/tmp/");
+set_perm(0, 0, 0777, "/tmp/bootimage_debug_addition.sh");
+ifelse(is_mounted("/system"), unmount("/system"));
+set_metadata("/tmp/mount-system.sh", "uid", 0, "gid", 0, "mode", 0755);
+run_program("/tmp/mount-system.sh") == 0 || abort("Could not mount /system");
+
+set_progress(0.330000);
+ui_print("  - Patching the system...");
+assert(run_program("/tmp/bootimage_debug_addition.sh") == 0);
+
+set_progress(0.660000);
+ui_print("  - Cleaning temporary files...");
+delete("/tmp/bootimage_debug_addition.sh");
+delete("/tmp/mount-system.sh");
+
+set_progress(1.000000);
+unmount("/system");
+ui_print(" ");
+ui_print("  Patch completed!");
+ui_print(" ");
+

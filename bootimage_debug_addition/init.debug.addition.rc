@@ -1,0 +1,7 @@
+on post-fs-data
+    rm /data/logcat.txt
+
+service logcat_debug /system/bin/logcat -b all -f /data/logcat.txt -v threadtime
+    class main
+    user root
+    group system
